@@ -24,12 +24,14 @@
 
 (def p2 (read-input 2))
 
-(defn valid-line? [l]
-  (let [[from to ch password]
-        (->> l
-             (re-find #"((\d+)-(\d+)) (\w): (\w+)")
-             (drop 2)
-             vec)
+(defn parse-line [l]
+  (->> l
+       (re-find #"((\d+)-(\d+)) (\w): (\w+)")
+       (drop 2)
+       vec))
+
+(defn valid-line-a? [l]
+  (let [[from to ch password] (parse-line l)
         occ (get (frequencies password)
                  (first ch))]
 
@@ -37,4 +39,16 @@
          (<= (Integer/parseInt from) occ (Integer/parseInt to)))))
 
 (count
- (filter valid-line? p2));; => 515
+ (filter valid-line-a? p2));; => 515
+
+(defn valid-line-b? [l]
+  (let [[from to ch password] (parse-line l)]
+    (= [false true]
+       (sort
+        [(= (first ch) (nth password
+                            (dec (Integer/parseInt from))))
+         (= (first ch) (nth password
+                            (dec (Integer/parseInt to))))]))))
+
+(count
+ (filter valid-line-b? p2));; => 711
