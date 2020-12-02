@@ -1,13 +1,15 @@
 (ns problems
   (:require [clojure.string :as str]))
 
+(defn ch->int [c] (Integer/parseInt c))
+
 (defn read-input
   [n]
   (-> (format "%s.txt" n)
       slurp
       str/split-lines))
 
-(def p1 (map #(Integer/parseInt %) (read-input 1)))
+(def p1 (map ch->int (read-input 1)))
 
 (defn p1-sol-a []
   (doseq [a p1
@@ -25,18 +27,22 @@
 (def p2 (read-input 2))
 
 (defn parse-line [l]
-  (->> l
-       (re-find #"((\d+)-(\d+)) (\w): (\w+)")
-       (drop 2)
-       vec))
+  (let [parsed
+        (->> l
+             (re-find #"((\d+)-(\d+)) (\w): (\w+)")
+             (drop 2)
+             vec)]
+    (-> parsed
+        (update 0 ch->int)
+        (update 1 ch->int)
+        (update 2 first))))
 
 (defn valid-line-a? [l]
   (let [[from to ch password] (parse-line l)
-        occ (get (frequencies password)
-                 (first ch))]
+        occ (get (frequencies password) ch)]
 
     (and (some? occ)
-         (<= (Integer/parseInt from) occ (Integer/parseInt to)))))
+         (<= from occ to))))
 
 (count
  (filter valid-line-a? p2));; => 515
@@ -45,10 +51,8 @@
   (let [[from to ch password] (parse-line l)]
     (= [false true]
        (sort
-        [(= (first ch) (nth password
-                            (dec (Integer/parseInt from))))
-         (= (first ch) (nth password
-                            (dec (Integer/parseInt to))))]))))
+        [(= ch (nth password (dec from)))
+         (= ch (nth password (dec to)))]))))
 
 (count
  (filter valid-line-b? p2));; => 711
