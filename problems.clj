@@ -61,17 +61,32 @@
 
 (defn coordinates
   "lazy sequences of coordinates to go through"
-  [x y max-y]
-  (loop [x' x,
-         y' y,
+  [max-x]
+  (loop [x' 0,
+         y' 0,
          acc []]
-    (if (> y' max-y)
+    (if (> x' max-x)
       acc
       (recur (inc x')
              (+ y' 3)
              (concat acc [[x' y']])))))
 
-(defn is-tree? [forest x y]
+(defn is-tree? [forest [x y]]
   (= \# (-> forest
             (nth x)
             (nth y))))
+
+(defn enlarge-forest [forest]
+  ;;TODO: avoid this made up 100 number
+  (map #(str/join (repeat 100 %)) forest))
+
+(def p3-full (enlarge-forest p3))
+
+(comment
+  (let [max-x  (count p3-full)
+        coords (coordinates (dec max-x))]
+
+    (->> coords
+         (map (partial is-tree? p3-full))
+         (filter true?)
+         count)))
