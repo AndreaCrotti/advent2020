@@ -56,3 +56,22 @@
 
 (count
  (filter valid-line-b? p2));; => 711
+
+(def p3 (read-input 3))
+
+(defn coordinates
+  "lazy sequences of coordinates to go through"
+  [x y max-y]
+  (loop [x' x,
+         y' y,
+         acc []]
+    (if (> y' max-y)
+      acc
+      (recur (inc x')
+             (+ y' 3)
+             (concat acc [[x' y']])))))
+
+(defn is-tree? [forest x y]
+  (= \# (-> forest
+            (nth x)
+            (nth y))))
