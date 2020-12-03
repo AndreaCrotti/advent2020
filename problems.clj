@@ -61,14 +61,14 @@
 
 (defn coordinates
   "lazy sequences of coordinates to go through"
-  [max-x]
+  [max-x inc-x inc-y]
   (loop [x' 0,
          y' 0,
          acc []]
     (if (> x' max-x)
       acc
-      (recur (inc x')
-             (+ y' 3)
+      (recur (+ x' inc-x)
+             (+ y' inc-y)
              (concat acc [[x' y']])))))
 
 (defn is-tree? [forest [x y]]
@@ -82,11 +82,20 @@
 
 (def p3-full (enlarge-forest p3))
 
-(comment
+(defn how-many-trees? [[inc-x inc-y]]
   (let [max-x  (count p3-full)
-        coords (coordinates (dec max-x))]
+        coords (coordinates (dec max-x) inc-x inc-y)]
 
     (->> coords
          (map (partial is-tree? p3-full))
          (filter true?)
          count)))
+
+(def slopes [[1 1]
+             [1 3]
+             [1 5]
+             [1 7]
+             [2 1]])
+
+(comment
+  (apply * (map how-many-trees? slopes)));; => 9406609920
