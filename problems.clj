@@ -1,7 +1,7 @@
 (ns problems
   (:require [clojure.string :as str]))
 
-(defn ch->int [c] (Integer/parseInt c))
+(defn str->int [c] (Integer/parseInt c))
 
 (defn read-input
   [n]
@@ -9,15 +9,15 @@
       slurp
       str/split-lines))
 
-(def p1 (map ch->int (read-input 1)))
+(def p1 (map str->int (read-input 1)))
 
-(defn p1-sol-a []
+(defn p1-a []
   (doseq [a p1
           b p1]
     (when (= 2020 (+ a b))
       (println a, b, (* a b)))))
 
-(defn p1-sol-b []
+(defn p1-b []
   (doseq [a p1
           b p1
           c p1]
@@ -26,15 +26,15 @@
 
 (def p2 (read-input 2))
 
-(defn parse-line [l]
+(defn- parse-line [l]
   (let [parsed
         (->> l
              (re-find #"((\d+)-(\d+)) (\w): (\w+)")
              (drop 2)
              vec)]
     (-> parsed
-        (update 0 ch->int)
-        (update 1 ch->int)
+        (update 0 str->int)
+        (update 1 str->int)
         (update 2 first))))
 
 (defn valid-line-a? [l]
@@ -104,7 +104,8 @@
 
 (defn- get-fields [passport]
   (into {}
-        (map #(str/split % #":") passport)))
+        (for [[k v] (map #(str/split % #":") passport)]
+          [(keyword k) v])))
 
 (defn- valid-passport? [passport-keys]
   (clojure.set/subset?
@@ -117,13 +118,53 @@
        (remove #(= [""] %))
        (map #(str/join " " %))
        (map #(str/split % #" "))
-       (map get-fields)
-       (map (comp set keys))))
+       (map get-fields)))
 
 (comment
   (->> cleaned-p4
        (map valid-passport?)
        (filter true?)
        count))
-;; => nil
-;; => nil
+
+(defn str->int-some [s]
+  (some-> s str->int))
+
+(defn matches [reg s]
+  (some->> s (re-matches reg)))
+
+(def passport-parse
+  {:byr str->int-some
+   :iyr str->int-some
+   :eyr str->int-some
+   :hcl #(matches #"#(\d|[abcdef]){6}" %)
+   :hgt #(matches #"(\d+)(cm|in)" %)
+   :ecl #(matches #"amb|blu|brn|gry|grn|hzl|oth" %)
+   :pid #(matches #"\d{9}" %)})
+
+(defn height [[_full h unit]]
+  (cond
+    (= unit "cm") (<= 150 h 193)
+    (= unit "in") (<= 59 h 76)))
+
+(def passport-validate
+  {:byr #(<= 1920 % 2002)
+   :iyr #(<= 2010 % 2002)
+   :eyr #(<= 2020 % 2030)
+   :hgt height})
+
+(defn valid-passport-2 [passport]
+  (let [parsed (reduce-kv update passport passport-parse)
+        valid (into {}
+                    (for [[k v] parsed]
+                      {k
+                       (and v
+                            (get passport-validate k identity) v)}))]
+    (->> valid
+         vals
+         (every? some?))))
+
+(comment
+  (->> cleaned-p4
+       (map valid-passport-2)
+       (remove false?)
+       count))
