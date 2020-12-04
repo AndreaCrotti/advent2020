@@ -123,11 +123,11 @@
        (map #(str/split % #" "))
        (map get-fields)))
 
-(comment
-  (->> cleaned-p4
-       (map valid-passport?)
-       (filter true?)
-       count))
+(assert (= 245
+           (->> cleaned-p4
+                (map valid-passport?)
+                (filter true?)
+                count)))
 
 (defn str->int-some [s]
   (some-> s str->int))
