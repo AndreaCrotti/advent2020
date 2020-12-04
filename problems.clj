@@ -112,7 +112,7 @@
 
 (defn- valid-passport? [passport-keys]
   (clojure.set/subset?
-   #{"eyr" "pid" "byr" "ecl" "hcl" "hgt" "iyr"}
+   #{:eyr :pid :byr :ecl :hcl :hgt :iyr}
    passport-keys))
 
 (def cleaned-p4
@@ -162,9 +162,10 @@
                       {k
                        (and v
                             (get passport-validate k identity) v)}))]
-    (->> valid
-         vals
-         (every? some?))))
+    (and (valid-passport? (set (keys passport)))
+         (->> valid
+              vals
+              (every? some?)))))
 
 (comment
   (->> cleaned-p4
