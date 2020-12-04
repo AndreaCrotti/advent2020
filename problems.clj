@@ -108,8 +108,8 @@
 
 (defn- valid-passport? [passport-keys]
   (clojure.set/subset?
-   passport-keys
-   #{"eyr" "pid" "byr" "ecl" "hcl" "hgt" "iyr"}))
+   #{"eyr" "pid" "byr" "ecl" "hcl" "hgt" "iyr"}
+   passport-keys))
 
 (def cleaned-p4
   (->> p4
@@ -125,3 +125,5 @@
        (map valid-passport?)
        (filter true?)
        count))
+;; => nil
+;; => nil
