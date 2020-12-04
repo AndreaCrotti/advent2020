@@ -12,17 +12,22 @@
 (def p1 (map str->int (read-input 1)))
 
 (defn p1-a []
-  (doseq [a p1
-          b p1]
-    (when (= 2020 (+ a b))
-      (println a, b, (* a b)))))
+  (->> (for [a p1, b p1]
+         (when (= 2020 (+ a b))
+           (* a b)))
+       (filter some?)
+       first))
+
+(assert (= 980499 (p1-a)))
 
 (defn p1-b []
-  (doseq [a p1
-          b p1
-          c p1]
-    (when (= 2020 (+ a b c))
-      (println a, b, c (* a b c)))))
+  (->> (for [a p1, b p1, c p1]
+         (when (= 2020 (+ a b c))
+           (* a b c)))
+       (filter some?)
+       first))
+
+(assert (= 200637446 (p1-b)))
 
 (def p2 (read-input 2))
 
@@ -44,8 +49,7 @@
     (and (some? occ)
          (<= from occ to))))
 
-(count
- (filter valid-line-a? p2));; => 515
+(assert (= 515 (count (filter valid-line-a? p2))))
 
 (defn valid-line-b? [l]
   (let [[from to ch password] (parse-line l)]
@@ -54,8 +58,7 @@
         [(= ch (nth password (dec from)))
          (= ch (nth password (dec to)))]))))
 
-(count
- (filter valid-line-b? p2));; => 711
+(assert (= 711 (count (filter valid-line-b? p2))))
 
 (def p3 (read-input 3))
 
