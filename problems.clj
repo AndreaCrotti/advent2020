@@ -99,3 +99,29 @@
 
 (comment
   (apply * (map how-many-trees? slopes)));; => 9406609920
+
+(def p4 (read-input 4))
+
+(defn- get-fields [passport]
+  (into {}
+        (map #(str/split % #":") passport)))
+
+(defn- valid-passport? [passport-keys]
+  (clojure.set/subset?
+   passport-keys
+   #{"eyr" "pid" "byr" "ecl" "hcl" "hgt" "iyr"}))
+
+(def cleaned-p4
+  (->> p4
+       (partition-by #(= "" %))
+       (remove #(= [""] %))
+       (map #(str/join " " %))
+       (map #(str/split % #" "))
+       (map get-fields)
+       (map (comp set keys))))
+
+(comment
+  (->> cleaned-p4
+       (map valid-passport?)
+       (filter true?)
+       count))
