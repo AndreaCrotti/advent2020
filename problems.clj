@@ -151,9 +151,10 @@
    :pid #(matches #"\d{9}" %)})
 
 (defn height [[_full h unit]]
-  (cond
-    (= unit "cm") (<= 150 h 193)
-    (= unit "in") (<= 59 h 76)))
+  (let [h (str->int h)]
+    (cond
+      (= unit "cm") (<= 150 h 193)
+      (= unit "in") (<= 59 h 76))))
 
 (def passport-validate
   {:byr #(<= 1920 % 2002)
@@ -161,20 +162,24 @@
    :eyr #(<= 2020 % 2030)
    :hgt height})
 
+(def with-nil-support
+  (into {}
+        (for [[k f] passport-validate]
+          [k (fn [v] (and (some? v) (f v)))])))
+
 (defn valid-passport-2 [passport]
   (let [parsed (reduce-kv update passport passport-parse)
-        valid (into {}
-                    (for [[k v] parsed]
-                      {k
-                       (and v
-                            (get passport-validate k identity) v)}))]
+        valid (reduce-kv update parsed with-nil-support)]
     (and (valid-passport? (set (keys passport)))
          (->> valid
               vals
-              (every? some?)))))
+              ;;TODO: improve it here by simplifying the validation step
+              (every? #(and (some? %) (not (false? %))))))))
 
-(comment
+(defn p4-b []
   (->> cleaned-p4
        (map valid-passport-2)
        (remove false?)
        count))
+
+(assert (= 133 (p4-b)))
