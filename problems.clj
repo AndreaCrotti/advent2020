@@ -49,7 +49,10 @@
     (and (some? occ)
          (<= from occ to))))
 
-(assert (= 515 (count (filter valid-line-a? p2))))
+(defn p2-a []
+  (count (filter valid-line-a? p2)))
+
+(assert (= 515 (p2-a)))
 
 (defn valid-line-b? [l]
   (let [[from to ch password] (parse-line l)]
@@ -58,7 +61,10 @@
         [(= ch (nth password (dec from)))
          (= ch (nth password (dec to)))]))))
 
-(assert (= 711 (count (filter valid-line-b? p2))))
+(defn p2-b []
+  (count (filter valid-line-b? p2)))
+
+(assert (= 711 (p2-b)))
 
 (def p3 (read-input 3))
 
@@ -151,7 +157,7 @@
 
 (def passport-validate
   {:byr #(<= 1920 % 2002)
-   :iyr #(<= 2010 % 2002)
+   :iyr #(<= 2010 % 2020)
    :eyr #(<= 2020 % 2030)
    :hgt height})
 
