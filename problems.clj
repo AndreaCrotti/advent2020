@@ -190,6 +190,8 @@
   (is (= 245 (p4-a)))
   (is (= 133 (p4-b))))
 
+(def p5 (read-input 5))
+
 (defn d->pow [mapping idx item]
   (Math/round
    (* (get mapping item)
@@ -208,7 +210,15 @@
   (let [[rs cs] (split-at 7 s)]
     [(get-row rs) (get-column cs)]))
 
+(defn seat-id [s]
+  (let [[r c] (find-seat s)]
+    (+ c (* 8 r))))
+
+(defn p5-a []
+  (apply max (map seat-id p5)))
+
 (deftest p5-test
   (is (= 44 (get-row "FBFBBFF")))
   (is (= 5 (get-column "RLR")))
-  (is (= (find-seat "FBFBBFFRLR") [44 5])))
+  (is (= (find-seat "FBFBBFFRLR") [44 5]))
+  (is (= 850 (p5-a))))
