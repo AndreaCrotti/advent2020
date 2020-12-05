@@ -217,8 +217,18 @@
 (defn p5-a []
   (apply max (map seat-id p5)))
 
+(defn p5-b []
+  (let [all-seat-ids (sort (map seat-id p5))]
+    (->> (for [[b a] (zipmap all-seat-ids (drop 1 all-seat-ids))]
+           (let [d (- a b)]
+             (when (> d 1)
+               (inc b))))
+         (remove nil?)
+         first)))
+
 (deftest p5-test
   (is (= 44 (get-row "FBFBBFF")))
   (is (= 5 (get-column "RLR")))
   (is (= (find-seat "FBFBBFFRLR") [44 5]))
-  (is (= 850 (p5-a))))
+  (is (= 850 (p5-a)))
+  (is (= 599 (p5-b))))
