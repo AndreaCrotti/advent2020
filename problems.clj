@@ -189,3 +189,26 @@
 (deftest p4-test
   (is (= 245 (p4-a)))
   (is (= 133 (p4-b))))
+
+(defn d->pow [mapping idx item]
+  (Math/round
+   (* (get mapping item)
+      (Math/pow 2 idx))))
+
+(defn s->int [mapping s]
+  (->> s
+       reverse
+       (map-indexed (partial d->pow mapping))
+       (apply +)))
+
+(def get-row (partial s->int {\F 0, \B 1}))
+(def get-column (partial s->int {\L 0, \R 1}))
+
+(defn find-seat [s]
+  (let [[rs cs] (split-at 7 s)]
+    [(get-row rs) (get-column cs)]))
+
+(deftest p5-test
+  (is (= 44 (get-row "FBFBBFF")))
+  (is (= 5 (get-column "RLR")))
+  (is (= (find-seat "FBFBBFFRLR") [44 5])))
