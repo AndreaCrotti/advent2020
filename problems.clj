@@ -129,11 +129,13 @@
        (map #(str/split % #" "))
        (map get-fields)))
 
-(assert (= 245
-           (->> cleaned-p4
-                (map valid-passport?)
-                (filter true?)
-                count)))
+(defn p4-a []
+  (->> cleaned-p4
+       (map valid-passport?)
+       (filter true?)
+       count))
+
+(assert (= 245 (p4-a)))
 
 (defn str->int-some [s]
   (some-> s str->int))
