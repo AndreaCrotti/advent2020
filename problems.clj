@@ -1,5 +1,6 @@
 (ns problems
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str]
+            [clojure.test :refer [deftest is testing]]))
 
 (defn str->int [c] (Integer/parseInt c))
 
@@ -18,8 +19,6 @@
        (filter some?)
        first))
 
-(assert (= 980499 (p1-a)))
-
 (defn p1-b []
   (->> (for [a p1, b p1, c p1]
          (when (= 2020 (+ a b c))
@@ -27,7 +26,9 @@
        (filter some?)
        first))
 
-(assert (= 200637446 (p1-b)))
+(deftest p1-test
+  (is (= 980499 (p1-a)))
+  (is (= 200637446 (p1-b))))
 
 (def p2 (read-input 2))
 
@@ -52,8 +53,6 @@
 (defn p2-a []
   (count (filter valid-line-a? p2)))
 
-(assert (= 515 (p2-a)))
-
 (defn valid-line-b? [l]
   (let [[from to ch password] (parse-line l)]
     (= [false true]
@@ -64,7 +63,9 @@
 (defn p2-b []
   (count (filter valid-line-b? p2)))
 
-(assert (= 711 (p2-b)))
+(deftest p2-test
+  (is (= 515 (p2-a)))
+  (is (= 711 (p2-b))))
 
 (def p3 (read-input 3))
 
@@ -106,8 +107,11 @@
              [1 7]
              [2 1]])
 
-(comment
-  (apply * (map how-many-trees? slopes)));; => 9406609920
+(defn p3-b []
+  (apply * (map how-many-trees? slopes)))
+
+(deftest p3-test
+  (is (= 9406609920 (p3-b))))
 
 (def p4 (read-input 4))
 
@@ -134,8 +138,6 @@
        (map valid-passport?)
        (filter true?)
        count))
-
-(assert (= 245 (p4-a)))
 
 (defn str->int-some [s]
   (some-> s str->int))
@@ -184,4 +186,6 @@
        (remove false?)
        count))
 
-(assert (= 133 (p4-b)))
+(deftest p4-test
+  (is (= 245 (p4-a)))
+  (is (= 133 (p4-b))))
