@@ -1,6 +1,6 @@
 (ns problems
   (:require [clojure.string :as str]
-            [clojure.test :refer [deftest is testing]]))
+            [clojure.test :refer [deftest is]]))
 
 (defn str->int [c] (Integer/parseInt c))
 
@@ -245,8 +245,9 @@
        count))
 
 (defn p6* [reduce-fn]
-  (apply +
-         (map (partial yes-count reduce-fn) p6)))
+  (->> p6
+       (map (partial yes-count reduce-fn))
+       (apply +)))
 
 (defn p6-a [] (p6* clojure.set/union))
 (defn p6-b [] (p6* clojure.set/intersection))
