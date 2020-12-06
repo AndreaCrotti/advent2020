@@ -232,3 +232,26 @@
   (is (= (find-seat "FBFBBFFRLR") [44 5]))
   (is (= 850 (p5-a)))
   (is (= 599 (p5-b))))
+
+(def p6
+  (->> (read-input 6)
+       (partition-by #(= "" %))
+       (remove #(= [""] %))))
+
+(defn yes-count [reduce-fn group]
+  (->> group
+       (map set)
+       (reduce reduce-fn)
+       count))
+
+(defn p6-a []
+  (apply +
+         (map (partial yes-count clojure.set/union) p6)))
+
+(defn p6-b []
+  (apply +
+         (map (partial yes-count clojure.set/intersection) p6)))
+
+(deftest p6-test
+  (is (= 6443 (p6-a)))
+  (is (= 3232 (p6-b))))
