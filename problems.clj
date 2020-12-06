@@ -244,13 +244,12 @@
        (reduce reduce-fn)
        count))
 
-(defn p6-a []
+(defn p6* [reduce-fn]
   (apply +
-         (map (partial yes-count clojure.set/union) p6)))
+         (map (partial yes-count reduce-fn) p6)))
 
-(defn p6-b []
-  (apply +
-         (map (partial yes-count clojure.set/intersection) p6)))
+(defn p6-a [] (p6* clojure.set/union))
+(defn p6-b [] (p6* clojure.set/intersection))
 
 (deftest p6-test
   (is (= 6443 (p6-a)))
