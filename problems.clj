@@ -1,16 +1,9 @@
 (ns problems
   (:require [clojure.string :as str]
-            [clojure.test :refer [deftest is]]))
+            [clojure.set :as s]
+            [utils :as u]))
 
-(defn str->int [c] (Integer/parseInt c))
-
-(defn read-input
-  [n]
-  (-> (format "%s.txt" n)
-      slurp
-      str/split-lines))
-
-(def p1 (map str->int (read-input 1)))
+(def p1 (map u/str->int (u/read-input 1)))
 
 (defn p1-a []
   (->> (for [a p1, b p1]
@@ -26,11 +19,7 @@
        (filter some?)
        first))
 
-(deftest p1-test
-  (is (= 980499 (p1-a)))
-  (is (= 200637446 (p1-b))))
-
-(def p2 (read-input 2))
+(def p2 (u/read-input 2))
 
 (defn- parse-line [l]
   (let [parsed
@@ -39,8 +28,8 @@
              (drop 2)
              vec)]
     (-> parsed
-        (update 0 str->int)
-        (update 1 str->int)
+        (update 0 u/str->int)
+        (update 1 u/str->int)
         (update 2 first))))
 
 (defn valid-line-a? [l]
@@ -63,11 +52,7 @@
 (defn p2-b []
   (count (filter valid-line-b? p2)))
 
-(deftest p2-test
-  (is (= 515 (p2-a)))
-  (is (= 711 (p2-b))))
-
-(def p3 (read-input 3))
+(def p3 (u/read-input 3))
 
 (defn coordinates
   "lazy sequences of coordinates to go through"
@@ -110,10 +95,7 @@
 (defn p3-b []
   (apply * (map how-many-trees? slopes)))
 
-(deftest p3-test
-  (is (= 9406609920 (p3-b))))
-
-(def p4 (read-input 4))
+(def p4 (u/read-input 4))
 
 (defn- get-fields [passport]
   (into {}
@@ -121,7 +103,7 @@
           [(keyword k) v])))
 
 (defn- valid-passport? [passport-keys]
-  (clojure.set/subset?
+  (s/subset?
    #{:eyr :pid :byr :ecl :hcl :hgt :iyr}
    passport-keys))
 
@@ -140,7 +122,7 @@
        count))
 
 (defn str->int-some [s]
-  (some-> s str->int))
+  (some-> s u/str->int))
 
 (defn matches [reg s]
   (some->> s (re-matches reg)))
@@ -155,7 +137,7 @@
    :pid #(matches #"\d{9}" %)})
 
 (defn height [[_full h unit]]
-  (let [h (str->int h)]
+  (let [h (u/str->int h)]
     (cond
       (= unit "cm") (<= 150 h 193)
       (= unit "in") (<= 59 h 76))))
@@ -186,11 +168,7 @@
        (remove false?)
        count))
 
-(deftest p4-test
-  (is (= 245 (p4-a)))
-  (is (= 133 (p4-b))))
-
-(def p5 (read-input 5))
+(def p5 (u/read-input 5))
 
 (defn d->pow [mapping idx item]
   (Math/round
@@ -226,15 +204,8 @@
          (remove nil?)
          first)))
 
-(deftest p5-test
-  (is (= 44 (get-row "FBFBBFF")))
-  (is (= 5 (get-column "RLR")))
-  (is (= (find-seat "FBFBBFFRLR") [44 5]))
-  (is (= 850 (p5-a)))
-  (is (= 599 (p5-b))))
-
 (def p6
-  (->> (read-input 6)
+  (->> (u/read-input 6)
        (partition-by #(= "" %))
        (remove #(= [""] %))))
 
@@ -251,7 +222,3 @@
 
 (defn p6-a [] (p6* clojure.set/union))
 (defn p6-b [] (p6* clojure.set/intersection))
-
-(deftest p6-test
-  (is (= 6443 (p6-a)))
-  (is (= 3232 (p6-b))))
