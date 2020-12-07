@@ -27,3 +27,18 @@
 (deftest p6-test
   (is (= 6443 (p/p6-a)))
   (is (= 3232 (p/p6-b))))
+
+(deftest p7-test
+  (is (= ["striped white" "4" "drab silver"]
+         (p/parse-rule "striped white bags contain 4 drab silver bags.")))
+
+  (is (= [nil "4 drab silver" "4 drab silver" "4" "no other"]
+         (p/parse-rule "drab silver bags contain no other bags.")))
+
+  (is (= {"striped white" 4}
+         (p/to->map "striped white bags contain 4 drab silver bags.")))
+
+  (is (= {"vibrant lavender" {"dotted aqua" 3
+                              "pale chartreuse" 4
+                              "mirrored blue" 5}}
+         (p/to->map "vibrant lavender bags contain 3 dotted aqua bags, 4 pale chartreuse bags, 5 mirrored blue bags."))))

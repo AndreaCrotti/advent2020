@@ -221,5 +221,21 @@
 (defn p6-a [] (p6* clojure.set/union))
 (defn p6-b [] (p6* clojure.set/intersection))
 
+(def p7 (u/read-input 7))
+
 (defn parse-rule [r]
-  (re-seq #"(.*) bags? contain (\d+) (.*) bags?." r))
+  (->> r
+       ;;TODO: do everything with a single regexp might be too hard
+       (re-seq #"(.*) bags? contain (((\d+) (.*))|no other) bags?.")
+       first
+       (remove nil?)
+       (drop 1)))
+
+(defn to->map [r]
+  (let [parsed (parse-rule r)]
+    (if (= 2 (count parsed))
+      {(first parsed) 0}
+      {(first parsed) (u/str->int (nth parsed 3))})))
+
+(defn get-rules []
+  (into {} (map to->map p7)))
