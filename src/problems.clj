@@ -223,19 +223,29 @@
 
 (def p7 (u/read-input 7))
 
-(defn parse-rule [r]
-  (->> r
-       ;;TODO: do everything with a single regexp might be too hard
-       (re-seq #"(.*) bags? contain (((\d+) (.*))|no other) bags?.")
-       first
-       (remove nil?)
-       (drop 1)))
+(def zeroth #"(.*) bags? contain no other bags.")
+(def morth #"(.*) bags? contain (.*)")
+(def inner-reg #"(\d+) (.*)")
 
-(defn to->map [r]
-  (let [parsed (parse-rule r)]
-    (if (= 2 (count parsed))
-      {(first parsed) 0}
-      {(first parsed) (u/str->int (nth parsed 3))})))
+(defn remove-dots [s]
+  (str/replace s
+   "."
+   ""))
+
+(defn parse-component [c]
+  (let [[_ n colour] (re-find inner-reg c)]
+    {colour (u/str->int n)}))
+
+(defn parse-rule [r]
+  (let [zm (re-find zeroth r)
+        mm (re-find morth r)]
+    (cond
+      zm {(first zm) 0}
+      mm (let [[_ big smalls] mm
+               no-dots (remove-dots smalls)
+               components (str/split no-dots #", ")]
+           {big (into {}
+                      (map parse-component components))}))))
 
 (defn get-rules []
-  (into {} (map to->map p7)))
+  (into {} (map parse-rule p7)))
