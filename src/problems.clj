@@ -225,7 +225,6 @@
 
 (def p7 (u/read-input 7))
 
-(def zeroth #"(.*) bags? contain no other bags.")
 (def morth #"(.*) bags? contain (.*)")
 (def inner-reg #"\d+ (.*) bags?")
 
@@ -234,21 +233,17 @@
     colour))
 
 (defn parse-rule [r]
-  (let [zm (re-find zeroth r)
-        mm (re-find morth r)]
-    (cond
-      zm nil
-      mm (let [[_ big smalls] mm
-               no-dots (str/replace smalls "." "")
-               components (str/split no-dots #", ")]
-           (for [c (map parse-component components)]
-             [c big])))))
+  (when-let [mm (re-find morth r)]
+    (let [[_ big smalls] mm
+          no-dots (str/replace smalls "." "")
+          components (str/split no-dots #", ")]
+      (for [c (map parse-component components)]
+        [c big]))))
 
 (defn get-graph []
   (->> (map parse-rule p7)
        (remove nil?)
        (apply concat)
-       (into [])
        (apply lg/digraph)))
 
 (defn p7-a []

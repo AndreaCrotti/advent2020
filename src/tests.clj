@@ -1,7 +1,6 @@
 (ns tests
   (:require [clojure.test :refer [deftest is]]
-            [problems :as p]
-            [loom.graph :as lg]))
+            [problems :as p]))
 
 (deftest p1-test
   (is (= 980499 (p/p1-a)))
