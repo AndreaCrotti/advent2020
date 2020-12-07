@@ -6,18 +6,16 @@
 (def p1 (map u/str->int (u/read-input 1)))
 
 (defn p1-a []
-  (->> (for [a p1, b p1]
-         (when (= 2020 (+ a b))
-           (* a b)))
-       (filter some?)
-       first))
+  (first
+   (for [a p1, b p1
+         :when (= 2020 (+ a b))]
+     (* a b))))
 
 (defn p1-b []
-  (->> (for [a p1, b p1, c p1]
-         (when (= 2020 (+ a b c))
-           (* a b c)))
-       (filter some?)
-       first))
+  (first
+   (for [a p1, b p1, c p1
+         :when (= 2020 (+ a b c))]
+     (* a b c))))
 
 (def p2 (u/read-input 2))
 
@@ -222,3 +220,6 @@
 
 (defn p6-a [] (p6* clojure.set/union))
 (defn p6-b [] (p6* clojure.set/intersection))
+
+(defn parse-rule [r]
+  (re-seq #"(.*) bags? contain (\d+) (.*) bags?." r))
