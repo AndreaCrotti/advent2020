@@ -37,20 +37,6 @@
          (p/parse-rule "drab silver bags contain no other bags.")))
 
   (is (= {"plaid beige" {"muted silver" 3, "vibrant orange" 4}}
-       (p/parse-rule "plaid beige bags contain 3 muted silver bags, 4 vibrant orange bags."))))
+         (p/parse-rule "plaid beige bags contain 3 muted silver bags, 4 vibrant orange bags.")))
 
-(def simple-graph
-  [[:gold :brown]
-   [:brown :blue]
-   [:green :yellow]])
-
-(require '[loom.graph :as lg])
-(require '[loom.alg :as la])
-
-(def gg
-  (apply lg/digraph simple-graph))
-
-(first
- (filter
-  #(contains? (set %) :gold)
-  (la/connected-components gg)))
+  (is (= 103 (p/p7-a))))

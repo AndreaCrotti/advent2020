@@ -252,8 +252,8 @@
        (apply lg/digraph)))
 
 (defn p7-a []
-  (->> (la/connected-components (get-graph))
-       (filter #(contains? (set %) "shiny gold"))
-       first
+  (->> (la/bf-traverse (get-graph) "shiny gold")
        set
-       count))
+       count
+       ;; removing the node itself
+       dec))
