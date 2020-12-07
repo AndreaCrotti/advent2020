@@ -2,6 +2,7 @@
   (:require [clojure.string :as str]
             [clojure.set :as s]
             [loom.graph :as lg]
+            [loom.alg :as la]
             [utils :as u]))
 
 (def p1 (map u/str->int (u/read-input 1)))
@@ -226,10 +227,10 @@
 
 (def zeroth #"(.*) bags? contain no other bags.")
 (def morth #"(.*) bags? contain (.*)")
-(def inner-reg #"(\d+) (.*) bags?")
+(def inner-reg #"\d+ (.*) bags?")
 
 (defn parse-component [c]
-  (let [[_ _n colour] (re-find inner-reg c)]
+  (let [[_ colour] (re-find inner-reg c)]
     colour))
 
 (defn parse-rule [r]
@@ -240,10 +241,19 @@
       mm (let [[_ big smalls] mm
                no-dots (str/replace smalls "." "")
                components (str/split no-dots #", ")]
-           {big (map parse-component components)}))))
+           (for [c (map parse-component components)]
+             [c big])))))
 
 (defn get-graph []
   (->> (map parse-rule p7)
        (remove nil?)
+       (apply concat)
        (into [])
-       (apply lg/graph)))
+       (apply lg/digraph)))
+
+(defn p7-a []
+  (->> (la/connected-components (get-graph))
+       (filter #(contains? (set %) "shiny gold"))
+       first
+       set
+       count))

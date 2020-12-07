@@ -1,6 +1,7 @@
 (ns tests
   (:require [clojure.test :refer [deftest is]]
-            [problems :as p]))
+            [problems :as p]
+            [loom.graph :as lg]))
 
 (deftest p1-test
   (is (= 980499 (p/p1-a)))
@@ -37,3 +38,19 @@
 
   (is (= {"plaid beige" {"muted silver" 3, "vibrant orange" 4}}
        (p/parse-rule "plaid beige bags contain 3 muted silver bags, 4 vibrant orange bags."))))
+
+(def simple-graph
+  [[:gold :brown]
+   [:brown :blue]
+   [:green :yellow]])
+
+(require '[loom.graph :as lg])
+(require '[loom.alg :as la])
+
+(def gg
+  (apply lg/digraph simple-graph))
+
+(first
+ (filter
+  #(contains? (set %) :gold)
+  (la/connected-components gg)))
