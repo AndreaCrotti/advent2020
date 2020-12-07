@@ -1,6 +1,7 @@
 (ns problems
   (:require [clojure.string :as str]
             [clojure.set :as s]
+            [loom.graph :as lg]
             [utils :as u]))
 
 (def p1 (map u/str->int (u/read-input 1)))
@@ -227,25 +228,22 @@
 (def morth #"(.*) bags? contain (.*)")
 (def inner-reg #"(\d+) (.*) bags?")
 
-(defn remove-dots [s]
-  (str/replace s
-   "."
-   ""))
-
 (defn parse-component [c]
-  (let [[_ n colour] (re-find inner-reg c)]
-    {colour (u/str->int n)}))
+  (let [[_ _n colour] (re-find inner-reg c)]
+    colour))
 
 (defn parse-rule [r]
   (let [zm (re-find zeroth r)
         mm (re-find morth r)]
     (cond
-      zm {(first zm) 0}
+      zm nil
       mm (let [[_ big smalls] mm
-               no-dots (remove-dots smalls)
+               no-dots (str/replace smalls "." "")
                components (str/split no-dots #", ")]
-           {big (into {}
-                      (map parse-component components))}))))
+           {big (map parse-component components)}))))
 
-(defn get-rules []
-  (into {} (map parse-rule p7)))
+(defn get-graph []
+  (->> (map parse-rule p7)
+       (remove nil?)
+       (into [])
+       (apply lg/graph)))
