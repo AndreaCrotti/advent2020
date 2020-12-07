@@ -5,6 +5,6 @@
 
 (defn read-input
   [n]
-  (-> (format "%s.txt" n)
+  (-> (format "resources/%s.txt" n)
       slurp
       str/split-lines))
