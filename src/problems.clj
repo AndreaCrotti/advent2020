@@ -225,7 +225,7 @@
 
 (def zeroth #"(.*) bags? contain no other bags.")
 (def morth #"(.*) bags? contain (.*)")
-(def inner-reg #"(\d+) (.*)")
+(def inner-reg #"(\d+) (.*) bags?")
 
 (defn remove-dots [s]
   (str/replace s
