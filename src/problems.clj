@@ -256,8 +256,11 @@
 
 (def p8 (u/read-input 8))
 
+(defn parse-instr [i]
+  (drop 1 (re-find #"(.*) (.*\d+)" i)))
+
 (defn instr [instr current acc]
-  (let [[_ op n] (re-find #"(.*) (.*\d+)" instr)
+  (let [[op n] (parse-instr instr)
         n' (u/str->int n)]
     (condp = op
         "nop" [(inc current) acc]
@@ -269,10 +272,52 @@
   ;; current is the line number, acc the accumulator and evaluated
   ;; keep track if something was already executed or not
   (loop [current 0, acc 0, evaluated #{}]
-    (if (contains? evaluated current)
+    (if (or (= current (count instructions)) (contains? evaluated current))
       acc
       (let [[new-cur new-acc] (instr (nth instructions current)
                                      current acc)]
         (recur new-cur new-acc (conj evaluated current))))))
 
 (def p8-a (partial vm p8))
+
+(defn terminates? [instructions]
+  ;; current is the line number, acc the accumulator and evaluated
+  ;; keep track if something was already executed or not
+  (loop [current 0, acc 0, evaluated #{}]
+    (cond
+      (contains? evaluated current) false
+      (= current (count instructions)) true
+      :else (let [[new-cur new-acc] (instr (nth instructions current)
+                                           current acc)]
+              (recur new-cur new-acc (conj evaluated current))))))
+
+(defn possible-changes
+  "Replace oee nop with one jmp or viceversa"
+  [instructions]
+  (loop [idx 0, changes []]
+    (if (= idx (count instructions))
+      changes
+      (let [i (nth instructions idx)
+            [op _n] (parse-instr i)
+            replace (get {"jmp" "nop"
+                          "nop" "jmp"} op)]
+        (if replace
+          (recur (inc idx) (conj changes [replace idx]))
+          (recur (inc idx) changes))))))
+
+(defn find-bug [instructions]
+  (->> (for [[ch idx] (possible-changes instructions)]
+         (let [[_op n] (parse-instr (nth instructions idx))
+               new-instructions (assoc instructions idx (str ch " " n))]
+           (when (terminates? new-instructions)
+             [ch idx])))
+       (filter some?)
+       first))
+
+(defn p8-b []
+  (let [[ch idx] (find-bug p8)
+        old-instr (nth p8 idx)
+        [_ n] (parse-instr old-instr)
+        new-instructions (assoc p8 idx (str ch " " n))]
+
+    (vm new-instructions)))
