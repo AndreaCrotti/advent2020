@@ -225,6 +225,7 @@
 
 (def p7 (u/read-input 7))
 
+(def zeroth #".*no other bags.*")
 (def morth #"(.*) bags? contain (.*)")
 (def inner-reg #"\d+ (.*) bags?")
 
@@ -233,8 +234,9 @@
     colour))
 
 (defn parse-rule [r]
-  (when-let [mm (re-find morth r)]
-    (let [[_ big smalls] mm
+  (when-not (re-find zeroth r)
+    (let [mm (re-find morth r)
+          [_ big smalls] mm
           components (str/split smalls #", ")]
       (for [c (map parse-component components)]
         [c big]))))
