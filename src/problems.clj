@@ -301,9 +301,10 @@
             [op _n] (parse-instr i)
             replace (get {"jmp" "nop"
                           "nop" "jmp"} op)]
-        (if replace
-          (recur (inc idx) (conj changes [replace idx]))
-          (recur (inc idx) changes))))))
+        (recur (inc idx)
+               (if replace
+                 (conj changes [replace idx])
+                 changes))))))
 
 (defn terminating-alternatives [instructions]
   (->> (for [[ch idx] (possible-changes instructions)]
