@@ -235,8 +235,7 @@
 (defn parse-rule [r]
   (when-let [mm (re-find morth r)]
     (let [[_ big smalls] mm
-          no-dots (str/replace smalls "." "")
-          components (str/split no-dots #", ")]
+          components (str/split smalls #", ")]
       (for [c (map parse-component components)]
         [c big]))))
 
