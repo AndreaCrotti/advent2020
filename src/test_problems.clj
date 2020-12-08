@@ -58,5 +58,4 @@
   (is (true? (p/terminates? (assoc input-test 7 "nop -4"))))
 
   (is (= [["jmp" 0] ["nop" 2] ["nop" 4] ["nop" 7]] (p/possible-changes input-test)))
-  (is (= ["nop" 7] (p/find-bug input-test)))
   (is (= 846 (p/p8-b))))

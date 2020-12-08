@@ -305,19 +305,16 @@
           (recur (inc idx) (conj changes [replace idx]))
           (recur (inc idx) changes))))))
 
-(defn find-bug [instructions]
+(defn terminating-alternatives [instructions]
   (->> (for [[ch idx] (possible-changes instructions)]
          (let [[_op n] (parse-instr (nth instructions idx))
                new-instructions (assoc instructions idx (str ch " " n))]
            (when (terminates? new-instructions)
-             [ch idx])))
+             new-instructions)))
        (filter some?)
        first))
 
 (defn p8-b []
-  (let [[ch idx] (find-bug p8)
-        old-instr (nth p8 idx)
-        [_ n] (parse-instr old-instr)
-        new-instructions (assoc p8 idx (str ch " " n))]
-
-    (vm new-instructions)))
+  (-> p8
+      terminating-alternatives
+      vm))
