@@ -227,29 +227,52 @@
 
 (def zeroth #".*no other bags.*")
 (def morth #"(.*) bags? contain (.*)")
-(def inner-reg #"\d+ (.*) bags?")
+(def inner-reg #"(\d+) (.*) bags?")
 
-(defn parse-component [c]
-  (let [[_ colour] (re-find inner-reg c)]
-    colour))
+(defn parse-colour [c]
+  (let [[_ n colour] (re-find inner-reg c)]
+    [n colour]))
 
 (defn parse-rule [r]
   (when-not (re-find zeroth r)
     (let [mm (re-find morth r)
           [_ big smalls] mm
           components (str/split smalls #", ")]
-      (for [c (map parse-component components)]
-        [c big]))))
+      (for [[n c] (map parse-colour components)]
+        [c big n]))))
 
 (defn get-graph []
   (->> (map parse-rule p7)
        (remove nil?)
        (apply concat)
-       (apply lg/digraph)))
+       (apply lg/weighted-digraph)))
 
 (defn p7-a []
-  (->> (la/bf-traverse (get-graph) "shiny gold")
-       set
+  (->> "shiny gold"
+       (la/bf-traverse (get-graph))
        count
        ;; removing the node itself
        dec))
+
+(def p8 (u/read-input 8))
+
+(defn instr [instr current acc]
+  (let [[_ op n] (re-find #"(.*) (.*\d+)" instr)
+        n' (u/str->int n)]
+    (condp = op
+        "nop" [(inc current) acc]
+        "acc" [(inc current) (+ acc n')]
+        "jmp" [(+ current n') acc])))
+
+;; need to keep track also at the instructions that were executed already
+(defn vm [instructions]
+  ;; current is the line number, acc the accumulator and evaluated
+  ;; keep track if something was already executed or not
+  (loop [current 0, acc 0, evaluated #{}]
+    (if (contains? evaluated current)
+      acc
+      (let [[new-cur new-acc] (instr (nth instructions current)
+                                     current acc)]
+        (recur new-cur new-acc (conj evaluated current))))))
+
+(def p8-a (partial vm p8))

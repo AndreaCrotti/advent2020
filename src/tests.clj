@@ -29,14 +29,14 @@
   (is (= 3232 (p/p6-b))))
 
 (deftest p7-test
-  (is (= [["drab silver" "striped white"]]
+  (is (= [["drab silver" "striped white" "4"]]
          (p/parse-rule "striped white bags contain 4 drab silver bags.")))
 
   (is (= nil
          (p/parse-rule "drab silver bags contain no other bags.")))
 
-  (is (= [["muted silver" "plaid beige"]
-          ["vibrant orange" "plaid beige"]]
+  (is (= [["muted silver" "plaid beige" "3"]
+          ["vibrant orange" "plaid beige" "4"]]
          (p/parse-rule "plaid beige bags contain 3 muted silver bags, 4 vibrant orange bags.")))
 
   (is (= 103 (p/p7-a))))

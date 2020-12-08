@@ -39,3 +39,18 @@
          (p/parse-rule "plaid beige bags contain 3 muted silver bags, 4 vibrant orange bags.")))
 
   (is (= 103 (p/p7-a))))
+
+(def input-test
+  ["nop +0"
+   "acc +1"
+   "jmp +4"
+   "acc +3"
+   "jmp -3"
+   "acc -99"
+   "acc +1"
+   "jmp -4"
+   "acc +6"])
+
+(deftest p8-test
+  (is (= 5 (p/vm input-test)))
+  (is (= 1723 (p/p8-a))))
