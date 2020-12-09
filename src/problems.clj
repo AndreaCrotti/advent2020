@@ -319,3 +319,9 @@
   (-> p8
       terminating-alternatives
       vm))
+
+(def p9 (map u/str->int (u/read-input 9)))
+(defn gen-previous [])
+
+(defn intruder [numbers preamble-size]
+  )

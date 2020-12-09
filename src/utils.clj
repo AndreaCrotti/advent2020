@@ -1,7 +1,7 @@
 (ns utils
   (:require [clojure.string :as str]))
 
-(defn str->int [c] (Integer/parseInt c))
+(defn str->int [c] (Long/parseLong c))
 
 (defn read-input
   [n]

@@ -2,4 +2,5 @@
 {:reporter [:kaocha.reporter/documentation]
  :tests [{:id          :unit
           :ns-patterns ["test-.*"]
+
           :test-paths  ["src"]}]}

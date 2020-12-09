@@ -59,3 +59,14 @@
 
   (is (= [["jmp" 0] ["nop" 2] ["nop" 4] ["nop" 7]] (p/possible-changes input-test)))
   (is (= 846 (p/p8-b))))
+
+(def p9-sample
+  [35 20 15 25 47 40 62 55 65 95 102 117 150 182 127 219 299 277 309 576])
+
+(def p9-small [1 2 3 4])
+;; pairs of all the previous couples of numbers
+(def pairs [4 [[1 2] [1 3] [2 1] [3 1]]])
+
+(deftest p9-test
+  (is (= 127 (p/intruder p9-sample 5)))
+  )
