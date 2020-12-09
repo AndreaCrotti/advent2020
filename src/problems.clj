@@ -239,7 +239,7 @@
           [_ big smalls] mm
           components (str/split smalls #", ")]
       (for [[n c] (map parse-colour components)]
-        [c big n]))))
+        [c big (u/str->int n)]))))
 
 (defn get-graph []
   (->> (map parse-rule p7)
@@ -254,9 +254,19 @@
        ;; removing the node itself
        dec))
 
+(defn n-bags-inside [gr starting]
+  (let [edges (lg/out-edges gr starting)]
+    (if (empty? edges)
+      1
+      (apply +
+             (for [e edges]
+               (* (lg/weight gr e)
+                  (n-bags-inside gr (second e))))))))
+
 (defn p7-b []
-  ;; count all the bags that can fit
-  )
+  (* 2
+     (dec
+      (n-bags-inside (lg/transpose (get-graph)) "shiny gold"))))
 
 (def p8 (u/read-input 8))
 
@@ -311,6 +321,8 @@
                  changes))))))
 
 (defn terminating-alternatives [instructions]
+  ;;TODO: use loop/recur to avoid visiting all possible solutions
+  ;;since we don't need to try them all
   (->> (for [[ch idx] (possible-changes instructions)]
          (let [[_op n] (parse-instr (nth instructions idx))
                new-instructions (assoc instructions idx (str ch " " n))]
