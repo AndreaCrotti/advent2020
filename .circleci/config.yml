@@ -6,7 +6,7 @@ jobs:
 
     steps:
       - checkout
-      - run: clojure -m kaocha.runner
+      - run: ./test.sh
 
 workflows:
   version: 2
