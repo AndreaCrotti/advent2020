@@ -342,4 +342,17 @@
        (filter (fn [[n subs]] (not (is-sum? n subs))))
        ffirst))
 
+(defn contiguous [numbers sum]
+  (loop [size 2, idx 0]
+    (let [inp-size (count numbers)
+          sub (take size (drop idx numbers))]
+      (if (= idx inp-size)
+        (recur (inc size) 0)
+        (when-not (= size inp-size)
+          (if (= sum (apply + sub))
+            (+ (apply min sub) (apply max sub))
+            (recur size (inc idx))))))))
+
 (defn p9-a [] (intruder p9 25))
+
+(defn p9-b [] (contiguous p9 (p9-a)))
