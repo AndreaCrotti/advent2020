@@ -254,6 +254,10 @@
        ;; removing the node itself
        dec))
 
+(defn p7-b []
+  ;; count all the bags that can fit
+  )
+
 (def p8 (u/read-input 8))
 
 (defn parse-instr [i]
