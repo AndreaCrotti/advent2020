@@ -321,7 +321,25 @@
       vm))
 
 (def p9 (map u/str->int (u/read-input 9)))
-(defn gen-previous [])
+
+(defn gen-subsets [numbers preamble-size]
+  (for [idx (range preamble-size (count numbers))
+        :let [cur (nth numbers idx)]]
+    [cur (for [a (take preamble-size (drop (- idx preamble-size) numbers))
+               b (take preamble-size (drop (- idx preamble-size) numbers))
+               :when (not= a b)]
+           [a b])]))
+
+(defn is-sum? [n subsets]
+  (contains?
+   (->> subsets
+        (map #(apply + %))
+        set)
+   n))
 
 (defn intruder [numbers preamble-size]
-  )
+  (->> (gen-subsets numbers preamble-size)
+       (filter (fn [[n subs]] (not (is-sum? n subs))))
+       ffirst))
+
+(defn p9-a [] (intruder p9 25))
