@@ -254,17 +254,16 @@
        ;; removing the node itself
        dec))
 
-(defn n-bags-inside [gr starting]
+(defn n-bags-inside [gr starting prev-weight]
   (let [edges (lg/out-edges gr starting)]
     (if (empty? edges)
       1
       (apply +
-             (concat
-              (map (partial lg/weight gr) edges)
-              (for [e edges]
-                ;; (+ (lg/weight gr e ))
-                (* (lg/weight gr e)
-                   (n-bags-inside gr (second e)))))))))
+             (conj prev-weight)
+             (for [e edges]
+               ;; (+ (lg/weight gr e ))
+               (* (lg/weight gr e)
+                  (n-bags-inside gr (second e) (lg/weight gr e))))))))
 
 (defn p7-b []
   (* 2

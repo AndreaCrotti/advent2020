@@ -89,3 +89,8 @@
 
   (is (= 36981213 (p/p9-b)))
   (is (= 62 (p/contiguous p9-sample 127))))
+
+(def short-input [16 10 15 5 1 11 7 19 6 12 4])
+
+(deftest p10-test
+  (is (= p/jolts short-input [[7 1] [5 3]])))
