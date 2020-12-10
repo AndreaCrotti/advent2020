@@ -58,7 +58,8 @@
   (is (= 103 (p/p7-a)))
 
   (is (= 18 (p/n-bags-inside sample-g :a)))
-  (is (= 126 (p/n-bags-inside sample-long :sg))))
+  (is (= 126 (p/n-bags-inside sample-long :sg)))
+  (is (= 1469 (p/p7-b))))
 
 (def input-test
   ["nop +0"
@@ -93,4 +94,4 @@
 (def short-input [16 10 15 5 1 11 7 19 6 12 4])
 
 (deftest p10-test
-  (is (= p/jolts short-input [[7 1] [5 3]])))
+  #_(is (= p/jolts short-input [[7 1] [5 3]])))
