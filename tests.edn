@@ -1,6 +1,6 @@
 #kaocha/v1
 {:reporter [:kaocha.reporter/documentation]
  :tests [{:id          :unit
-          :ns-patterns ["test-.*"]
+          :ns-patterns [".*-test"]
 
           :test-paths  ["src"]}]}

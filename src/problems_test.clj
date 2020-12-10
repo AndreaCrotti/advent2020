@@ -1,6 +1,7 @@
-(ns test-problems
+(ns problems-test
   (:require [clojure.test :refer [deftest is]]
-            [problems :as p]))
+            [problems :as p]
+            [loom.graph :as lg]))
 
 (deftest p1-test
   (is (= 980499 (p/p1-a)))
@@ -28,18 +29,36 @@
   (is (= 6443 (p/p6-a)))
   (is (= 3232 (p/p6-b))))
 
+(def sample-g
+  (lg/weighted-digraph
+   [:a :b 2]
+   [:a :d 10]
+   [:b :c 3]))
+
+(def sample-long
+  (lg/weighted-digraph
+   [:sg :dr 2]
+   [:dr :do 2]
+   [:do :dy 2]
+   [:dy :dg 2]
+   [:dg :db 2]
+   [:db :dv 2]))
+
 (deftest p7-test
-  (is (= [["drab silver" "striped white" "4"]]
+  (is (= [["drab silver" "striped white" 4]]
          (p/parse-rule "striped white bags contain 4 drab silver bags.")))
 
   (is (= nil
          (p/parse-rule "drab silver bags contain no other bags.")))
 
-  (is (= [["muted silver" "plaid beige" "3"]
-          ["vibrant orange" "plaid beige" "4"]]
+  (is (= [["muted silver" "plaid beige" 3]
+          ["vibrant orange" "plaid beige" 4]]
          (p/parse-rule "plaid beige bags contain 3 muted silver bags, 4 vibrant orange bags.")))
 
-  (is (= 103 (p/p7-a))))
+  (is (= 103 (p/p7-a)))
+
+  (is (= 18 (p/n-bags-inside sample-g :a)))
+  (is (= 126 (p/n-bags-inside sample-long :sg))))
 
 (def input-test
   ["nop +0"

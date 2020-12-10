@@ -259,9 +259,12 @@
     (if (empty? edges)
       1
       (apply +
-             (for [e edges]
-               (* (lg/weight gr e)
-                  (n-bags-inside gr (second e))))))))
+             (concat
+              (map (partial lg/weight gr) edges)
+              (for [e edges]
+                ;; (+ (lg/weight gr e ))
+                (* (lg/weight gr e)
+                   (n-bags-inside gr (second e)))))))))
 
 (defn p7-b []
   (* 2
