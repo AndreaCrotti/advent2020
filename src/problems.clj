@@ -373,3 +373,9 @@
 (defn p9-a [] (intruder p9 25))
 
 (defn p9-b [] (contiguous p9 (p9-a)))
+
+(def p10 (map u/str->int (u/read-input 10)))
+
+(defn p10-a [])
+
+(defn p10-b [])
