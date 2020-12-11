@@ -379,3 +379,54 @@
 (defn p10-a [])
 
 (defn p10-b [])
+
+(def ch->meaning
+  {\L :free
+   \. :floor
+   \# :busy})
+
+(def p11
+  (->> (u/read-input 11)
+       (map #(map ch->meaning %))))
+
+(defn contained? [grid [x y]]
+  (and (>= x 0) (>= y 0)
+       (< x (count grid))
+       (< y (count (nth grid x)))))
+
+(defn adjacent [grid x y]
+  (filter (partial contained? grid)
+          [[(dec x) y]
+           [x (dec y)]
+           [(inc x) y]
+           [x (inc y)]]))
+
+(defn cell-value [grid x y]
+  (nth (nth grid x) y))
+
+(defn set-value [grid [x y v]]
+  (assoc-in grid [x y] v))
+
+;; given a grid return a new grid applying the rules of evolution
+(defn changes [grid]
+  (for [x (range (count grid))
+        y (range (count (first grid)))
+        :let [cell (cell-value grid x y)
+              adj (map #(apply cell-value (cons grid %))
+                       (adjacent grid x y))]]
+    (cond
+      (= :free cell) (when (every? #(not= :busy %) adj) [x y :busy])
+      (= :busy cell) (when (>= (count (filter #(= :free %) adj)) 4) [x y :free]))))
+
+(defn evolve [grid]
+  (loop [new-grid grid
+         ch (changes grid)]
+    (if (empty? ch)
+      new-grid
+      (if (nil? (first ch))
+        (recur new-grid (rest ch))
+        (recur (set-value new-grid (first ch))
+               (rest ch))))))
+
+(defn p11-a []
+  )

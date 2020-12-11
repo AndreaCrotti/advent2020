@@ -1,7 +1,8 @@
 (ns problems-test
   (:require [clojure.test :refer [deftest is]]
             [problems :as p]
-            [loom.graph :as lg]))
+            [loom.graph :as lg]
+            [clojure.string :as str]))
 
 (deftest p1-test
   (is (= 980499 (p/p1-a)))
@@ -93,9 +94,36 @@
 
 (def short-input [16 10 15 5 1 11 7 19 6 12 4])
 
-(deftest p10-test
-  (is (= p/jolts short-input [[7 1] [5 3]]))
+;; (deftest p10-test
+;;   (is (= p/jolts short-input [[7 1] [5 3]]))
 
-  (is (= 0 (p/p10-a)))
+;;   (is (= 0 (p/p10-a)))
 
-  (is (= 0 (p/p10-b))))
+;;   (is (= 0 (p/p10-b))))
+
+(def simple-start
+  "L.LL.LL.LL
+LLLLLLL.LL
+L.L.L..L..
+LLLL.LL.LL
+L.LL.LL.LL
+L.LLLLL.LL
+..L.L.....
+LLLLLLLLLL
+L.LLLLLL.L
+L.LLLLL.LL")
+
+(def simple-end
+  "#.#L.L#.##
+#LLL#LL.L#
+L.#.L..#..
+#L##.##.L#
+#.#L.LL.LL
+#.#L#L#.##
+..L.L.....
+#L#L##L#L#
+#.LLLLLL.L
+#.#L#L#.##")
+
+(deftest p11-test
+  )
