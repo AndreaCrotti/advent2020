@@ -430,7 +430,7 @@
 
     (cond
       (= :free cell) (when-not (contains? (set adj) :busy) [x y :busy])
-      (= :busy cell) (when (>= (count (filter #(= :free %) adj)) 4) [x y :free]))))
+      (= :busy cell) (when (>= (count (filter #(= :busy %) adj)) 4) [x y :free]))))
 
 (defn evolve [grid]
   (loop [new-grid grid
@@ -451,12 +451,11 @@
        (apply +)))
 
 (defn fixed-point [grid]
-  (loop [next-grid (evolve grid)
-         n 0]
-    (println "nth time = " n)
-    (if (= next-grid grid)
-      grid
-      (recur (evolve grid) (inc n)))))
+  (loop [next-grid grid]
+    (let [ng (evolve next-grid)]
+      (if (= ng next-grid)
+        ng
+        (recur ng)))))
 
 (defn p11-a []
   (count-occupied
