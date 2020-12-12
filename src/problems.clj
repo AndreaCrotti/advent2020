@@ -1,6 +1,7 @@
 (ns problems
   (:require [clojure.string :as str]
             [clojure.set :as s]
+            [clojure.math.combinatorics :as c]
             [loom.graph :as lg]
             [loom.alg :as la]
             [utils :as u]))
@@ -387,19 +388,33 @@
 
 (def p11
   (->> (u/read-input 11)
-       (map #(map ch->meaning %))))
+       (mapv #(mapv ch->meaning %))))
 
 (defn contained? [grid [x y]]
   (and (>= x 0) (>= y 0)
        (< x (count grid))
        (< y (count (nth grid x)))))
 
+;;TODO: use this instead??
+(defn incrs []
+  (filter
+   #(= 1 (Math/abs (apply + %)))
+   (c/cartesian-product
+    [-1 0 1]
+    [-1 0 1])))
+
 (defn adjacent [grid x y]
   (filter (partial contained? grid)
-          [[(dec x) y]
-           [x (dec y)]
+          [
+           [(dec x) (dec y)]
+           [(dec x) (inc y)]
+           [(dec x) y]
+           [(inc x) (dec y)]
+           [(inc x) (inc y)]
            [(inc x) y]
-           [x (inc y)]]))
+           [x (dec y)]
+           [x (inc y)]
+           ]))
 
 (defn cell-value [grid x y]
   (nth (nth grid x) y))
@@ -428,5 +443,22 @@
         (recur (set-value new-grid (first ch))
                (rest ch))))))
 
+(defn count-occupied [grid]
+  (->> grid
+       (map (fn [v]
+              (->> v
+                   (filter #(= :busy %))
+                   count)))
+       (apply +)))
+
+(defn fixed-point [grid]
+  (let [next-grid (evolve grid)]
+    (if (= next-grid grid)
+      grid
+      (recur (evolve grid)))))
+
 (defn p11-a []
-  )
+  (count-occupied
+   (fixed-point p11)))
+
+(defn p11-b [])

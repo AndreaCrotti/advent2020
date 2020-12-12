@@ -102,7 +102,7 @@
 ;;   (is (= 0 (p/p10-b))))
 
 (def simple-start
-  "L.LL.LL.LL
+  (->> "L.LL.LL.LL
 LLLLLLL.LL
 L.L.L..L..
 LLLL.LL.LL
@@ -111,19 +111,28 @@ L.LLLLL.LL
 ..L.L.....
 LLLLLLLLLL
 L.LLLLLL.L
-L.LLLLL.LL")
+L.LLLLL.LL"
+       (str/split-lines)
+       (mapv #(mapv p/ch->meaning %))))
 
-(def simple-end
-  "#.#L.L#.##
-#LLL#LL.L#
-L.#.L..#..
-#L##.##.L#
-#.#L.LL.LL
-#.#L#L#.##
+(def second-iteration
+  (->>
+   "#.LL.L#.##
+#LLLLLL.L#
+L.L.L..L..
+#LLL.LL.L#
+#.LL.LL.LL
+#.LLLL#.##
 ..L.L.....
-#L#L##L#L#
+#LLLLLLLL#
 #.LLLLLL.L
-#.#L#L#.##")
+#.#LLLL.##
+"
+   (str/split-lines)
+   (mapv #(mapv p/ch->meaning %))))
 
 (deftest p11-test
-  )
+  (is (= second-iteration
+         (p/evolve simple-start)))
+  (is (= 37
+         (p/count-occupied (p/fixed-point simple-start)))))
