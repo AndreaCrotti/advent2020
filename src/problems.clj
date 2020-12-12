@@ -405,16 +405,14 @@
 
 (defn adjacent [grid x y]
   (filter (partial contained? grid)
-          [
-           [(dec x) (dec y)]
+          [[(dec x) (dec y)]
            [(dec x) (inc y)]
            [(dec x) y]
            [(inc x) (dec y)]
            [(inc x) (inc y)]
            [(inc x) y]
            [x (dec y)]
-           [x (inc y)]
-           ]))
+           [x (inc y)]]))
 
 (defn cell-value [grid x y]
   (nth (nth grid x) y))
@@ -453,10 +451,12 @@
        (apply +)))
 
 (defn fixed-point [grid]
-  (loop [next-grid (evolve grid)]
+  (loop [next-grid (evolve grid)
+         n 0]
+    (println "nth time = " n)
     (if (= next-grid grid)
       grid
-      (recur (evolve grid)))))
+      (recur (evolve grid) (inc n)))))
 
 (defn p11-a []
   (count-occupied
