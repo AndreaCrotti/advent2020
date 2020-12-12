@@ -115,24 +115,41 @@ L.LLLLL.LL"
        (str/split-lines)
        (mapv #(mapv p/ch->meaning %))))
 
+
 (def second-iteration
   (->>
-   "#.LL.L#.##
-#LLLLLL.L#
-L.L.L..L..
-#LLL.LL.L#
-#.LL.LL.LL
-#.LLLL#.##
+   "#.##.##.##
+#######.##
+#.#.#..#..
+####.##.##
+#.##.##.##
+#.#####.##
+..#.#.....
+##########
+#.######.#
+#.#####.##"
+   (str/split-lines)
+   (mapv #(mapv p/ch->meaning %))))
+
+(def fixed
+  (->>
+   "#.#L.L#.##
+#LLL#LL.L#
+L.#.L..#..
+#L##.##.L#
+#.#L.LL.LL
+#.#L#L#.##
 ..L.L.....
-#LLLLLLLL#
+#L#L##L#L#
 #.LLLLLL.L
-#.#LLLL.##
-"
+#.#L#L#.##"
    (str/split-lines)
    (mapv #(mapv p/ch->meaning %))))
 
 (deftest p11-test
   (is (= second-iteration
          (p/evolve simple-start)))
+  (is (= fixed
+         (p/fixed-point simple-start)))
   (is (= 37
          (p/count-occupied (p/fixed-point simple-start)))))

@@ -429,8 +429,9 @@
         :let [cell (cell-value grid x y)
               adj (map #(apply cell-value (cons grid %))
                        (adjacent grid x y))]]
+
     (cond
-      (= :free cell) (when (every? #(not= :busy %) adj) [x y :busy])
+      (= :free cell) (when-not (contains? (set adj) :busy) [x y :busy])
       (= :busy cell) (when (>= (count (filter #(= :free %) adj)) 4) [x y :free]))))
 
 (defn evolve [grid]
@@ -452,7 +453,7 @@
        (apply +)))
 
 (defn fixed-point [grid]
-  (let [next-grid (evolve grid)]
+  (loop [next-grid (evolve grid)]
     (if (= next-grid grid)
       grid
       (recur (evolve grid)))))
@@ -461,4 +462,4 @@
   (count-occupied
    (fixed-point p11)))
 
-(defn p11-b [])
+(defn p11-b [] )
