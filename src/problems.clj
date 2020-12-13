@@ -403,16 +403,16 @@
     [-1 0 1]
     [-1 0 1])))
 
+(def tr-fns
+  (filter
+   #(not= [identity identity] %)
+   (c/cartesian-product [dec identity inc]
+                        [dec identity inc])))
+
 (defn adjacent [grid x y]
   (filter (partial contained? grid)
-          [[(dec x) (dec y)]
-           [(dec x) (inc y)]
-           [(dec x) y]
-           [(inc x) (dec y)]
-           [(inc x) (inc y)]
-           [(inc x) y]
-           [x (dec y)]
-           [x (inc y)]]))
+          (for [[fx fy] tr-fns]
+            [(fx x) (fy y)])))
 
 (defn cell-value [grid x y]
   (nth (nth grid x) y))
