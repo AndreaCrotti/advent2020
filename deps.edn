@@ -4,6 +4,10 @@
                   lambdaisland/kaocha                      {:mvn/version "1.0.732"}
                   com.clojure-goes-fast/clj-async-profiler {:mvn/version "0.4.1"}
                   org.clojure/math.combinatorics           {:mvn/version "0.1.6"}
-                  criterium/criterium                      {:mvn/version "0.4.6"}}
+                  }
  :paths          ["src"]
- :resource-paths ["resources"]}
+ :resource-paths ["resources"]
+ :aliases
+ {:with-profiler
+  {:jvm-opts   ["-Djdk.attach.allowAttachSelf"]
+   :extra-deps {criterium/criterium {:mvn/version "0.4.6"}}}}}
