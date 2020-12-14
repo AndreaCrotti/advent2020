@@ -420,17 +420,26 @@
 (defn set-value [grid [x y v]]
   (assoc-in grid [x y] v))
 
+(def rules
+  {:free [(fn [adj]
+            (not (contains? (set adj) :busy)))
+          :busy]
+   :busy [(fn [adj]
+            (>= (count (filter #(= :busy %) adj)) 4))
+          :free]
+   :floor [(constantly true)
+           :floor]})
+
 ;; given a grid return a new grid applying the rules of evolution
 (defn changes [grid]
   (for [x (range (count grid))
         y (range (count (first grid)))
         :let [cell (cell-value grid x y)
               adj (map #(apply cell-value (cons grid %))
-                       (adjacent grid x y))]]
-
-    (cond
-      (= :free cell) (when-not (contains? (set adj) :busy) [x y :busy])
-      (= :busy cell) (when (>= (count (filter #(= :busy %) adj)) 4) [x y :free]))))
+                       (adjacent grid x y))
+              [rule-fn out] (rules cell)]
+        :when (rule-fn adj)]
+    [x y out]))
 
 (defn evolve [grid]
   (loop [new-grid grid
