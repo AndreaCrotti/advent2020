@@ -1,3 +1,2 @@
 ((nil .
-      ;; ((cider-clojure-cli-parameters . "-Awith-profiler"))
-      ())
+      ((cider-clojure-cli-parameters . "-A:with-profiler")))

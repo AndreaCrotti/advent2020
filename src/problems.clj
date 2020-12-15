@@ -470,4 +470,5 @@
   (count-occupied
    (fixed-point p11)))
 
-(defn p11-b [] )
+(defn p11-b []
+  )
