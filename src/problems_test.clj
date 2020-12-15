@@ -101,8 +101,14 @@
 
 ;;   (is (= 0 (p/p10-b))))
 
+(defn s->grid [s]
+  (->> s
+       (str/split-lines)
+       (mapv #(mapv p/ch->meaning %))))
+
 (def simple-start
-  (->> "L.LL.LL.LL
+  (s->grid
+   "L.LL.LL.LL
 LLLLLLL.LL
 L.L.L..L..
 LLLL.LL.LL
@@ -111,14 +117,10 @@ L.LLLLL.LL
 ..L.L.....
 LLLLLLLLLL
 L.LLLLLL.L
-L.LLLLL.LL"
-       (str/split-lines)
-       (mapv #(mapv p/ch->meaning %))))
-
+L.LLLLL.LL"))
 
 (def second-iteration
-  (->>
-   "#.##.##.##
+  (s->grid "#.##.##.##
 #######.##
 #.#.#..#..
 ####.##.##
@@ -127,13 +129,10 @@ L.LLLLL.LL"
 ..#.#.....
 ##########
 #.######.#
-#.#####.##"
-   (str/split-lines)
-   (mapv #(mapv p/ch->meaning %))))
+#.#####.##"))
 
 (def fixed
-  (->>
-   "#.#L.L#.##
+  (s->grid "#.#L.L#.##
 #LLL#LL.L#
 L.#.L..#..
 #L##.##.L#
@@ -142,9 +141,18 @@ L.#.L..#..
 ..L.L.....
 #L#L##L#L#
 #.LLLLLL.L
-#.#L#L#.##"
-   (str/split-lines)
-   (mapv #(mapv p/ch->meaning %))))
+#.#L#L#.##"))
+
+(def visible-busy
+  (s->grid ".......#.
+...#.....
+.#.......
+.........
+..#L....#
+....#....
+.........
+#........
+...#....."))
 
 (deftest p11-test
   (is (= second-iteration
@@ -152,4 +160,7 @@ L.#.L..#..
   (is (= fixed
          (p/fixed-point simple-start)))
   (is (= 37
-         (p/count-occupied (p/fixed-point simple-start)))))
+         (p/count-occupied (p/fixed-point simple-start))))
+
+  (is (= (repeat 8 :busy)
+         (p/adjacent-v2 visible-busy 4 3))))

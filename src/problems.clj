@@ -414,6 +414,9 @@
           (for [[fx fy] tr-fns]
             [(fx x) (fy y)])))
 
+(defn adjacent-v2 [grid x y]
+  )
+
 (defn cell-value [grid x y]
   (nth (nth grid x) y))
 
